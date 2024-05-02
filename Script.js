@@ -1,16 +1,44 @@
 let slideIndex = 0;
+let slideInterval; 
 
 function showSlides() {
     const slides = document.querySelectorAll(".slide");
+    const leftArrow = document.querySelector(".left");
+    const rightArrow = document.querySelector(".right");
+    const slideshowContainer = document.querySelector(".slideshow-container");
 
-    for (let i = 0; i < slides.length; i++) {
-        slides[i].style.display = "none";
+    function displaySlide(index) {
+        slides.forEach((slide, i) => {
+            slide.style.display = i === index ? 'block' : 'none';
+        });
     }
 
-    slideIndex = (slideIndex + 1) % slides.length;
-    slides[slideIndex].style.display = "block";
+    function moveLeft() {
+        slideIndex = (slideIndex - 1 + slides.length) % slides.length;
+        displaySlide(slideIndex);
+    }
 
-    setTimeout(showSlides, 3000);
+    function moveRight() {
+        slideIndex = (slideIndex + 1) % slides.length;
+        displaySlide(slideIndex);
+    }
+
+    leftArrow.addEventListener('click', moveLeft);
+
+    rightArrow.addEventListener('click', moveRight);
+
+    function startSlideShow() {
+        slideInterval = setInterval(moveRight, 3000);
+    }
+
+    function stopSlideShow() {
+        clearInterval(slideInterval);
+    }
+
+    startSlideShow();
+
+    slideshowContainer.addEventListener('mouseenter', stopSlideShow);
+    slideshowContainer.addEventListener('mouseleave', startSlideShow);
 }
 
 document.addEventListener("DOMContentLoaded", showSlides);
